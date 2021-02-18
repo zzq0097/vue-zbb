@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { get,save,del } from '../../../api/user';
+import { get,save,del } from '../../../api/recipient';
 export default {
     name: 'basetable',
     data() {
