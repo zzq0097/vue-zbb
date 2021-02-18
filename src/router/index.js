@@ -17,7 +17,12 @@ export default new Router({
                 {
                     path: '/user',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/zbb/UserView.vue'),
-                    meta: { title: '用户管理' }
+                    meta: { title: '用户信息管理' }
+                },
+                {
+                    path: '/recipient',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/zbb/RecipientView.vue'),
+                    meta: { title: '受捐人信息管理' }
                 },
                 {
                     path: '/dashboard',

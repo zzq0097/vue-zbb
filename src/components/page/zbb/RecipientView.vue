@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 用户管理
+                    <i class="el-icon-lx-cascades"></i> 受捐人信息管理
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -29,6 +29,7 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="uid" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="age" label="年龄"></el-table-column>
                 <el-table-column prop="sex" label="性别">
                     <template slot-scope="scope">
                         <span v-if="scope.row.sex==='1'">男</span>
