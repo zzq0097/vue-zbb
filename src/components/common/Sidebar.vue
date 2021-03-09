@@ -67,6 +67,21 @@ export default {
                     title: '基础表格'
                 },
                 {
+                    icon: 'el-icon-lx-cascades',
+                    index: 'user',
+                    title: '用户信息管理'
+                },
+                {
+                    icon: 'el-icon-lx-cascades',
+                    index: 'recipient',
+                    title: '受捐人信息管理'
+                },
+                {
+                    icon: 'el-icon-lx-cascades',
+                    index: 'material',
+                    title: '捐赠物资记录'
+                },
+                {
                     icon: 'el-icon-lx-copy',
                     index: 'tabs',
                     title: 'tab选项卡'

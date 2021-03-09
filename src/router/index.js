@@ -25,6 +25,11 @@ export default new Router({
                     meta: { title: '受捐人信息管理' }
                 },
                 {
+                    path: '/material',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/zbb/MaterialView.vue'),
+                    meta: { title: '捐赠物资记录' }
+                },
+                {
                     path: '/dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
                     meta: { title: '系统首页' }
