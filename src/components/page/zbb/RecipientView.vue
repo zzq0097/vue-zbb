@@ -27,39 +27,21 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="uid" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="banner_image" label="轮播图"></el-table-column>
+                <el-table-column prop="content" label="内容"></el-table-column>
+                <el-table-column prop="info" label="简介"></el-table-column>
+                <el-table-column prop="title" label="标题"></el-table-column>
+                <el-table-column prop="address" label="受捐人地址"></el-table-column>
                 <el-table-column prop="age" label="年龄"></el-table-column>
-                <el-table-column prop="sex" label="性别">
+                <el-table-column prop="sex" label="性别"></el-table-column>
+                <el-table-column label="添加时间">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.sex==='1'">男</span>
-                        <span v-if="scope.row.sex==='0'">女</span>
+                        {{$timestampToTime(scope.row.add_time)}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="username" label="用户名"></el-table-column>
-                <el-table-column prop="password" label="密码"></el-table-column>
-                <el-table-column prop="salt" label="盐"></el-table-column>
-                <el-table-column prop="mobile" label="手机号"></el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
-                    <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
-                        ></el-image>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="状态" align="center">
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="date" label="注册时间"></el-table-column>
+                <el-table-column prop="status" label="轮播状态"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button

@@ -27,38 +27,39 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="uid" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="姓名"></el-table-column>
-                <el-table-column prop="sex" label="性别">
+                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="m_name" label="物资名称"></el-table-column>
+                <el-table-column prop="info" label="描述"></el-table-column>
+                <el-table-column prop="current_address" label="详细地址"></el-table-column>
+                <el-table-column prop="r_address" label="地址"></el-table-column>
+                <el-table-column prop="u_name" label="描述"></el-table-column>
+                <el-table-column label="描述">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.sex==='1'">男</span>
-                        <span v-if="scope.row.sex==='0'">女</span>
+                        <span v-if="scope.row.examine_status==='0'">未审核</span>
+                        <span v-else-if="scope.row.examine_status==='1'">审核通过</span>
+                        <span v-else-if="scope.row.examine_status==='2'">审核失败</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="username" label="用户名"></el-table-column>
-                <el-table-column prop="password" label="密码"></el-table-column>
-                <el-table-column prop="salt" label="盐"></el-table-column>
-                <el-table-column prop="mobile" label="手机号"></el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
+                <el-table-column label="描述">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.send_status==='0'">未捐赠</span>
+                        <span v-else-if="scope.row.send_status==='1'">捐赠中</span>
+                        <span v-else-if="scope.row.send_status==='2'">已捐赠</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="图片">
                     <template slot-scope="scope">
                         <el-image
                             class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
+                            :src="scope.row.image"
                         ></el-image>
                     </template>
                 </el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="状态" align="center">
+                <el-table-column label="添加时间">
                     <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
+                        {{$timestampToTime(scope.row.add_time)}}
                     </template>
                 </el-table-column>
-
-                <el-table-column prop="date" label="注册时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -90,11 +91,43 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="物资名称">
+                    <el-input v-model="form.m_name"></el-input>
+                </el-form-item>
+                <el-form-item label="描述">
+                    <el-input v-model="form.info"></el-input>
                 </el-form-item>
                 <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
+                    <el-input v-model="form.current_address"></el-input>
+                </el-form-item>
+                <el-form-item label="详细地址">
+                    <el-input v-model="form.r_address"></el-input>
+                </el-form-item>
+                <el-form-item label="捐赠状态">
+                    <el-select v-model="form.send_status">
+                        <el-option value="0" label="未捐赠"></el-option>
+                        <el-option value="1" label="捐赠中"></el-option>
+                        <el-option value="2" label="已捐赠"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="审核状态">
+                    <el-select v-model="form.examine_status">
+                        <el-option value="0" label="未审核"></el-option>
+                        <el-option value="1" label="审核成功"></el-option>
+                        <el-option value="2" label="审核失败"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="图片">
+                    <el-upload
+                        class="avatar-uploader"
+                        action="https://nu50abw.hn3.mofasuidao.cn/donation/index.php/admin/index/img"
+                        name="image"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                    >
+                        <img v-if="form.image" :src="form.image" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -131,6 +164,9 @@ export default {
         this.getData();
     },
     methods: {
+        handleAvatarSuccess(res) {
+            this.form.image = this.$imgPath+res.data;
+        },
         // 获取 easy-mock 的模拟数据
         getData() {
             get(this.query).then(res => {
@@ -152,7 +188,7 @@ export default {
             this.multipleSelection = val;
         },
         delAllSelection() {
-            this.goDel(this.multipleSelection.map(row=>row.uid));
+            this.goDel(this.multipleSelection.map(row=>row.id));
         },
         goDel(ids) {
             del({ids: ids}).then(res=>{
@@ -173,8 +209,14 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            save(this.form).then(res=>{
+                if (res.status == 1) {
+                    this.$message.success(`修改成功`);
+                } else {
+                    this.$message.error(`修改失败`);
+                }
+                this.getData();
+            })
         },
         // 分页导航
         handlePageChange(val) {

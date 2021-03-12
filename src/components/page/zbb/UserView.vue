@@ -29,36 +29,45 @@
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="uid" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
-                <el-table-column prop="sex" label="性别">
+                <el-table-column label="性别">
                     <template slot-scope="scope">
                         <span v-if="scope.row.sex==='1'">男</span>
-                        <span v-if="scope.row.sex==='0'">女</span>
+                        <span v-else-if="scope.row.sex==='2'">女</span>
+                        <span v-else>未选择</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="username" label="用户名"></el-table-column>
                 <el-table-column prop="password" label="密码"></el-table-column>
                 <el-table-column prop="salt" label="盐"></el-table-column>
+                <el-table-column prop="info" label="个人简介"></el-table-column>
+                <el-table-column label="类型">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.type==='1'">用户</span>
+                        <span v-else>管理员</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="类型">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.lock==='0'">正常</span>
+                        <span v-else>管理员</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="mobile" label="手机号"></el-table-column>
                 <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
+                <el-table-column label="头像" align="center">
                     <template slot-scope="scope">
                         <el-image
                             class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
+                            :src="scope.row.photo"
                         ></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="状态" align="center">
+                <el-table-column label="注册时间">
                     <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
+                        {{$timestampToTime(scope.row.add_time)}}
                     </template>
                 </el-table-column>
-
-                <el-table-column prop="date" label="注册时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -90,8 +99,36 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
+                <el-form-item label="性名">
                     <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="性别">
+                    <el-select v-model="form.sex">
+                        <el-option value="0" label="未选择"></el-option>
+                        <el-option value="1" label="男"></el-option>
+                        <el-option value="2" label="女"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="用户名">
+                    <el-input v-model="form.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                    <el-input v-model="form.password"></el-input>
+                </el-form-item>
+                <el-form-item label="盐">
+                    <el-input v-model="form.salt"></el-input>
+                </el-form-item>
+                <el-form-item label="状态">
+                    <el-select v-model="form.lock">
+                        <el-option value="0" label="正常"></el-option>
+                        <el-option value="1" label="锁定"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="form.address"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="form.address"></el-input>
                 </el-form-item>
                 <el-form-item label="地址">
                     <el-input v-model="form.address"></el-input>
