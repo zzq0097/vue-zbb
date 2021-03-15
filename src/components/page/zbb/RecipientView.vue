@@ -30,7 +30,12 @@
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
                 <el-table-column prop="banner_image" label="轮播图"></el-table-column>
-                <el-table-column prop="content" label="内容"></el-table-column>
+                <el-table-column label="内容">
+                    <template slot-scope="scope">
+                        <!-- <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor> -->
+                        {{scope.row.content}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="info" label="简介"></el-table-column>
                 <el-table-column prop="title" label="标题"></el-table-column>
                 <el-table-column prop="address" label="受捐人地址"></el-table-column>
@@ -71,13 +76,16 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+        <el-dialog title="编辑" :visible.sync="editVisible" width="800px">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="用户名">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="地址">
                     <el-input v-model="form.address"></el-input>
+                </el-form-item>
+                <el-form-item label="内容">
+                    <quill-editor ref="myTextEditor" v-model="form.content" :options="editorOption"></quill-editor>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -90,8 +98,15 @@
 
 <script>
 import { get,save,del } from '../../../api/recipient';
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
+import { quillEditor } from 'vue-quill-editor';
 export default {
     name: 'basetable',
+    components: {
+        quillEditor
+    },
     data() {
         return {
             query: {
@@ -99,6 +114,10 @@ export default {
                 name: '',
                 page: 1,
                 pageSize: 10
+            },
+            content: '',
+            editorOption: {
+                placeholder: 'Hello World'
             },
             tableData: [],
             multipleSelection: [],
@@ -156,8 +175,14 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            save(this.form).then(res=>{
+                if (res.status == 1) {
+                    this.$message.success(`修改成功`);
+                } else {
+                    this.$message.error(`修改失败`);
+                }
+                this.getData();
+            })
         },
         // 分页导航
         handlePageChange(val) {

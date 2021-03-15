@@ -210,8 +210,14 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            save(this.form).then(res=>{
+                if (res.status == 1) {
+                    this.$message.success(`修改成功`);
+                } else {
+                    this.$message.error(`修改失败`);
+                }
+                this.getData();
+            })
         },
         // 分页导航
         handlePageChange(val) {
