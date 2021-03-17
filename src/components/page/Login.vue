@@ -13,10 +13,20 @@
                         type="password"
                         placeholder="密码"
                         v-model="param.password"
-                        @keyup.enter.native="submitForm()"
                     >
                         <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
                     </el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input
+                        type="password"
+                        placeholder="验证码"
+                        v-model="param.verify"
+                        style="width: 180px"
+                    >
+                        <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
+                    </el-input>
+                    <el-image @click="verCode" :src="verCodeImg" style="margin: 5px 30px"></el-image>
                 </el-form-item>
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">登录</el-button>
@@ -28,30 +38,44 @@
 </template>
 
 <script>
-import {login} from "../../api/login"
+import {login,verify} from "../../api/login"
 export default {
     data: function() {
         return {
             param: {
                 username: '',
                 password: '',
+                verify: ''
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
                 password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+                verify: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
             },
+            verCodeImg: ''
         };
     },
+    created() {
+        this.verCode();
+    },
     methods: {
+        verCode() {
+            verify().then(res=>{
+                this.verCodeImg = window.URL.createObjectURL(res);
+            });
+        },
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
                     login(this.param).then(res =>{
-                        this.$message.success('登录成功');
-                        localStorage.setItem('ms_username', this.param.username);
-                        this.$router.push('/');
-                    }).catch(e=>{
-                        console.log(e);
+                        if (res.status == 200) {
+                            this.$message.success('登录成功');
+                            // localStorage.setItem('PHPSESSID',res);
+                            localStorage.setItem('ms_username', this.param.username);
+                            this.$router.push('/');
+                        } else {
+                            this.$message.error('登录失败：'+res.info);
+                        }
                     })
                 } else {
                     this.$message.error('请输入账号和密码');

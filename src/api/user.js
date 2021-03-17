@@ -19,7 +19,7 @@ export const save = data => {
 export const del = data => {
     return request({
         url: '/user_delete',
-        method: 'post',
+        method: 'delete',
         data: data
     });
 };

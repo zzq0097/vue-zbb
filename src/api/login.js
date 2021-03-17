@@ -1,10 +1,10 @@
 import request from '../utils/request';
 
-export const login = query => {
+export const login = data => {
     return request({
-        url: '/login',
+        url: '/login_verification',
         method: 'post',
-        params: query
+        data: data
     });
 };
 
@@ -13,6 +13,15 @@ export const register = data => {
         url: '/register',
         method: 'post',
         data: data
+    });
+};
+
+export const verify = data => {
+    return request({
+        url: '/ver',
+        method: 'get',
+        responseType: 'blob',
+        params: data
     });
 };
 

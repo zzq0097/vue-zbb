@@ -42,6 +42,7 @@ router.beforeEach((to, from, next) => {
 });
 
 Vue.prototype.$imgPath = "https://nu50abw.hn3.mofasuidao.cn/donation/App/Public/Uploads/photo/";
+// Vue.prototype.$imgPath = "http://localhost/donation/App/Public/Uploads/photo/";
 Vue.prototype.$timestampToTime = (timestamp) => {
     var now = new Date(timestamp*1000);
     var year=now.getFullYear();

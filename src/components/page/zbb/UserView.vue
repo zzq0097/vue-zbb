@@ -17,6 +17,7 @@
                 >批量删除</el-button>
                 <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="getData">搜索</el-button>
+                <el-button type="primary" style="float: right" @click="clearAndAdd">添加</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -46,14 +47,13 @@
                         <span v-else>管理员</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="类型">
+                <el-table-column label="状态">
                     <template slot-scope="scope">
                         <span v-if="scope.row.lock==='0'">正常</span>
-                        <span v-else>管理员</span>
+                        <span v-else>锁定</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="mobile" label="手机号"></el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
                 <el-table-column label="头像" align="center">
                     <template slot-scope="scope">
                         <el-image
@@ -62,7 +62,7 @@
                         ></el-image>
                     </template>
                 </el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
+                <el-table-column prop="address" label="详细地址"></el-table-column>
                 <el-table-column label="注册时间">
                     <template slot-scope="scope">
                         {{$timestampToTime(scope.row.add_time)}}
@@ -97,40 +97,60 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="性名">
+        <el-dialog title="编辑" :visible.sync="editVisible" width="470px">
+            <el-form ref="myform" :model="form" label-width="70px">
+                <el-form-item label="性名" prop="name">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="性别">
+                <el-form-item label="性别"  prop="sex">
                     <el-select v-model="form.sex">
                         <el-option value="0" label="未选择"></el-option>
                         <el-option value="1" label="男"></el-option>
                         <el-option value="2" label="女"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="用户名">
-                    <el-input v-model="form.username"></el-input>
+                <template v-if="form.uid==''">
+                    <el-form-item label="用户名"  prop="username">
+                        <el-input v-model="form.username"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" prop="password">
+                        <el-input v-model="form.password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="盐" prop="salt">
+                        <el-input v-model="form.salt"></el-input>
+                    </el-form-item>
+                </template>
+                <el-form-item label="类型" prop="type">
+                    <el-select v-model="form.type">
+                        <el-option value="1" label="用户"></el-option>
+                        <el-option value="0" label="管理员"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="密码">
-                    <el-input v-model="form.password"></el-input>
-                </el-form-item>
-                <el-form-item label="盐">
-                    <el-input v-model="form.salt"></el-input>
-                </el-form-item>
-                <el-form-item label="状态">
+                <el-form-item label="状态" prop="lock">
                     <el-select v-model="form.lock">
                         <el-option value="0" label="正常"></el-option>
                         <el-option value="1" label="锁定"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
+                <el-form-item label="手机号" prop="mobile">
+                    <el-input v-model="form.mobile"></el-input>
                 </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
+                <el-form-item label="个人介绍" prop="info">
+                    <el-input v-model="form.info"></el-input>
                 </el-form-item>
-                <el-form-item label="地址">
+                <el-form-item label="头像" prop="photo">
+                    <el-upload
+                        class="avatar-uploader"
+                        action="https://nu50abw.hn3.mofasuidao.cn/donation/index.php/admin/index/img"
+                        name="image"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                    >
+                        <img v-if="form.photo" :src="form.photo" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="详细地址" prop="address">
                     <el-input v-model="form.address"></el-input>
                 </el-form-item>
             </el-form>
@@ -160,6 +180,19 @@ export default {
             editVisible: false,
             pageTotal: 0,
             form: {},
+            initial_form: {
+                uid: '',
+                name: '',
+                sex: '',
+                username: '',
+                password: '',
+                salt: '',
+                info: '',
+                photo: '',
+                lock: '',
+                type: '',
+                address: ''
+            },
             idx: -1,
             id: -1
         };
@@ -168,6 +201,13 @@ export default {
         this.getData();
     },
     methods: {
+        clearAndAdd() {
+            this.form = this.initial_form;
+            this.editVisible = true;
+        },
+        handleAvatarSuccess(res) {
+            this.form.photo = this.$imgPath+res.data;
+        },
         // 获取 easy-mock 的模拟数据
         getData() {
             get(this.query).then(res => {
@@ -211,8 +251,9 @@ export default {
         saveEdit() {
             this.editVisible = false;
             save(this.form).then(res=>{
-                if (res.status == 1) {
+                if (res.status == 200) {
                     this.$message.success(`修改成功`);
+                    this.form = this.initial_form;
                 } else {
                     this.$message.error(`修改失败`);
                 }
@@ -256,5 +297,10 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+}
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
 }
 </style>
