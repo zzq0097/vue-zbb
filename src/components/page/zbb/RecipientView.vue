@@ -117,6 +117,9 @@
                 <el-form-item label="标题">
                     <el-input v-model="form.title"></el-input>
                 </el-form-item>
+                <el-form-item label="简介">
+                    <el-input v-model="form.info"></el-input>
+                </el-form-item>
                 <el-form-item label="图片">
                     <el-upload
                         class="avatar-uploader"

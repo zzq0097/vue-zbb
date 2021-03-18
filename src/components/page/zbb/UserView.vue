@@ -99,7 +99,7 @@
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="470px">
             <el-form ref="myform" :model="form" label-width="70px">
-                <el-form-item label="性名" prop="name">
+                <el-form-item label="姓名" prop="name">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="性别"  prop="sex">
