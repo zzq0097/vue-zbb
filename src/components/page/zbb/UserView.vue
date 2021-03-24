@@ -123,7 +123,7 @@
                 <el-form-item label="类型" prop="type">
                     <el-select v-model="form.type">
                         <el-option value="1" label="用户"></el-option>
-                        <el-option value="0" label="管理员"></el-option>
+                        <el-option value="2" label="管理员"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="状态" prop="lock">
