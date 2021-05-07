@@ -22,7 +22,6 @@
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="m_name" label="物资名称"></el-table-column>
                 <el-table-column prop="info" label="描述"></el-table-column>
-                <el-table-column prop="current_address" label="物资当前地址"></el-table-column>
                 <el-table-column prop="r_address" label="受捐人地址"></el-table-column>
                 <el-table-column prop="u_name" label="捐赠人"></el-table-column>
                 <el-table-column label="审核状态">
@@ -76,7 +75,7 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="500px">
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form" :model="form" label-width="120px">
                 <!-- <el-form-item label="物资名称">
                     <el-input v-model="form.m_name"></el-input>
                 </el-form-item>
@@ -98,8 +97,17 @@
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-form-item> -->
-                <el-form-item label="物资当前地址">
-                    <el-input v-model="form.current_address"></el-input>
+                <el-form-item label="捐出状态信息">
+                    <el-input type="textarea" v-model="form.current_info"></el-input>
+                </el-form-item>
+                <el-form-item label="未捐赠状态信息">
+                    <el-input type="textarea" v-model="form.no_info"></el-input>
+                </el-form-item>
+                <el-form-item label="已完成状态信息">
+                    <el-input type="textarea" v-model="form.over_info"></el-input>
+                </el-form-item>
+                <el-form-item label="审核状态信息">
+                    <el-input type="textarea" v-model="form.examine_info"></el-input>
                 </el-form-item>
                 <el-form-item label="捐赠状态">
                     <el-select v-model="form.send_status">
